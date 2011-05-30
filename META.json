@@ -36,7 +36,7 @@
    "provides" : {
       "Mac::QuickBundle" : {
          "file" : "lib/Mac/QuickBundle.pm",
-         "version" : "0.01"
+         "version" : "0.02"
       }
    },
    "release_status" : "stable",
@@ -48,5 +48,5 @@
          "url" : "http://github.com/mbarbon/mac-quickbundle"
       }
    },
-   "version" : "0.01"
+   "version" : "0.02"
 }

@@ -16,7 +16,7 @@ name: Mac-QuickBundle
 provides:
   Mac::QuickBundle:
     file: lib/Mac/QuickBundle.pm
-    version: 0.01
+    version: 0.02
 requires:
   Config::IniFiles: 0
   File::Slurp: 0
@@ -25,4 +25,4 @@ requires:
 resources:
   license: http://dev.perl.org/licenses/
   repository: http://github.com/mbarbon/mac-quickbundle
-version: 0.01
+version: 0.02

@@ -11,7 +11,7 @@ use warnings;
 
 use Exporter 'import';
 
-our $VERSION = '0.01';
+our $VERSION = '0.02';
 our @EXPORT_OK = qw(scan_dependencies_from_section copy_scripts
                     scan_dependencies load_dependencies merge_dependencies
                     find_shared_dependencies find_all_shared_dependencies
@@ -400,7 +400,7 @@ sub fix_libraries {
 
     my $dir = Cwd::cwd();
     chdir "$bundle_dir/Contents/Resources/Perl-Source";
-    system( "$perlwrapper/Tools/update_dylib_references.pl", '-q' );
+    system( $^X, "$perlwrapper/Tools/update_dylib_references.pl", '-q' );
     chdir $dir;
 }
 
@@ -414,14 +414,12 @@ sub build_perlwrapper {
     my $ccopts = ExtUtils::Embed::ccopts();
     my $ldopts = ExtUtils::Embed::ldopts();
 
-    $ccopts =~ s/(?:^|\s)-arch\s+\S+/ /g;
-    $ldopts =~ s/(?:^|\s)-arch\s+\S+/ /g;
     $ldopts =~ s/(?:^|\s)-lutil(?=\s|$)/ /g;
 
     system( join ' ', "$Config::Config{cc} $ccopts",
-                      "$perlwrapper/Source/PerlInterpreter.c",
-                      "$perlwrapper/Source/main.c -I'$perlwrapper/Source'",
-                      "-Wall -o $bundle_dir/Contents/MacOS/$executable_name",
+                      "'$perlwrapper/Source/PerlInterpreter.c'",
+                      "'$perlwrapper/Source/main.c' -I'$perlwrapper/Source'",
+                      "-Wall -o '$bundle_dir/Contents/MacOS/$executable_name'",
                       "-framework CoreFoundation -framework CoreServices",
                       $ldopts
             );
