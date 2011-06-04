@@ -11,7 +11,7 @@ use warnings;
 
 use Exporter 'import';
 
-our $VERSION = '0.02';
+our $VERSION = '0.03';
 our @EXPORT_OK = qw(scan_dependencies_from_section copy_scripts
                     scan_dependencies load_dependencies merge_dependencies
                     find_shared_dependencies find_all_shared_dependencies
@@ -127,7 +127,7 @@ sub _find_file_in_inc {
         return $abs if -f $abs;
     }
 
-    die "Can't find '$file' in \@INC: @$inc"
+    return undef;
 }
 
 sub _find_inc_dir {
@@ -253,12 +253,15 @@ sub scan_dependencies_from_section {
 
     my @dumps = $cfg->val( $deps_section, 'dump' );
     my @scandeps_sections = $cfg->val( $deps_section, 'scandeps' );
-    my @deps;
-    my %skip =
-      ( _find_file_in_inc( 'unicore/mktables', \@INC )     => 1,
-        _find_file_in_inc( 'unicore/mktables.lst', \@INC ) => 1,
-        _find_file_in_inc( 'unicore/TestProp.pl', \@INC )  => 1,
-        );
+    my( @deps, %skip );
+
+    foreach my $file ( qw(unicore/mktables unicore/mktables.lst
+                          unicore/TestProp.pl) ) {
+        my $abs = _find_file_in_inc( $file, \@INC );
+        next unless $abs;
+
+        $skip{$abs} = 1;
+    }
 
     for my $dump ( @dumps ) {
         push @deps, load_dependencies( _make_absolute( $dump, $base_path ) );
